@@ -50,6 +50,30 @@ const blogs = [
     url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
     likes: 2,
     __v: 0
+  },
+  {
+    _id: '5a422b891b54a676234d17fa',
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 10,
+    __v: 0
+  },
+  {
+    _id: '5a422bc61b54a676234d17fc',
+    title: 'Type wars',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html',
+    likes: 2,
+    __v: 0
+  },
+  {
+    _id: '5a422b891b54a676234d17fa',
+    title: 'First class tests',
+    author: 'Robert C. Martin',
+    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
+    likes: 10,
+    __v: 0
   }
 ]
 
@@ -74,6 +98,26 @@ describe('total likes', () => {
 
   test('calculates the total likes of all blogs correctly', () => {
     const result = listHelper.totalLikes(blogs)
-    assert.strictEqual(result, 36)
+    assert.strictEqual(result, 58)
+  })
+})
+
+describe('Most likes', () => {
+
+  test('when list is empty result is null', () => {
+    const result = listHelper.mostLikes([])
+    assert.strictEqual(result, null)
+  })
+
+  test('one blog list returs that specific blog', () => {
+    const oneBlog = [blogs[2]]
+
+    const result = listHelper.mostLikes(oneBlog)
+    assert.strictEqual(result, blogs[2])
+  })
+
+  test('Shows most liked correctly', () => {
+    const result = listHelper.mostLikes(blogs)
+    assert.strictEqual(result, blogs[2])
   })
 })
