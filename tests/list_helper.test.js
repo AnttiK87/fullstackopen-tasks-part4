@@ -2,6 +2,7 @@ const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 
+//mock data for testing
 const blogs = [
   {
     _id: '5a422a851b54a676234d17f7',
@@ -32,7 +33,7 @@ const blogs = [
     title: 'First class tests',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
+    likes: 2,
     __v: 0
   },
   {
@@ -56,7 +57,7 @@ const blogs = [
     title: 'First class tests',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
+    likes: 4,
     __v: 0
   },
   {
@@ -72,16 +73,18 @@ const blogs = [
     title: 'First class tests',
     author: 'Robert C. Martin',
     url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.htmll',
-    likes: 10,
+    likes: 3,
     __v: 0
   }
 ]
 
+// for testing test enviroment
 test('dummy returns one', () => {
   const result = listHelper.dummy(blogs)
   assert.strictEqual(result, 1)
 })
 
+// for testing totalLikes function
 describe('total likes', () => {
 
   test('when list is empty result is 0', () => {
@@ -98,10 +101,11 @@ describe('total likes', () => {
 
   test('calculates the total likes of all blogs correctly', () => {
     const result = listHelper.totalLikes(blogs)
-    assert.strictEqual(result, 58)
+    assert.strictEqual(result, 37)
   })
 })
 
+// for testing mostLikes function
 describe('Most likes', () => {
 
   test('when list is empty result is null', () => {
@@ -119,5 +123,21 @@ describe('Most likes', () => {
   test('Shows most liked correctly', () => {
     const result = listHelper.mostLikes(blogs)
     assert.strictEqual(result, blogs[2])
+  })
+})
+
+// for testing writerWithMostBlogs function
+describe('Writer with most blogs', () => {
+  test('Shows writer with most blogs correctly', () => {
+    const result = listHelper.writerWithMostBlogs(blogs)
+    assert.deepStrictEqual(result, { author: 'Robert C. Martin', blogs: 6 })
+  })
+})
+
+// for testing writerWithMostlikes function
+describe('Writer with most likes', () => {
+  test('Shows writer with most blogs correctly', () => {
+    const result = listHelper.writerWithMostlikes(blogs)
+    assert.deepStrictEqual(result, { author: 'Edsger W. Dijkstra', likes: 17 })
   })
 })

@@ -1,30 +1,74 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
-blogsRouter.get('/', (request, response, next) => {
-  Blog
-    .find({})
-    .then(blogs => {
-      response.json(blogs)
-    })
-    .catch(error => next(error))
+blogsRouter.get('/', async (request, response) => {
+  const blogs = await Blog
+    .find({}).populate('user', { username: 1, name: 1 })
+  response.json(blogs)
 })
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.get('/:id', async (request, response) => {
+  const blogs = await Blog.findById(request.params.id)
+  if (blogs) {
+    response.json(blogs)
+  } else {
+    response.status(404).end()
+  }
+})
+
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
+
+  const user = await User.findById(body.userId)
 
   const blog = new Blog({
     title: body.title,
     author: body.author,
     url: body.url,
+    user: user._id,
   })
 
-  blog
-    .save()
-    .then(savedBlog => {
-      response.json(savedBlog)
-    })
-    .catch(error => next(error))
+  const savedBlog = await blog.save()
+  user.notes = user.notes.concat(savedBlog._id)
+  await user.save()
+
+  response.status(201).json(savedBlog)
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+  const body = request.body
+
+  // Creating new Person model for validating
+  const validBlog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+  })
+
+  await validBlog.validate()
+
+  const blog = {
+    likes: body.likes,
+  }
+
+  // Etsi ensin blogi tietokannasta sen ID:llä
+  const existingBlog = await Blog.findById(request.params.id)
+
+  if (!existingBlog) {
+    // Jos blogia ei löydy, palautetaan 404-virhekoodi
+    return response.status(404).json({ error: 'Blog not found' })
+  }
+
+  // Jos blogi löytyy, päivitetään se
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+  response.json(updatedBlog)
+})
+
+blogsRouter.delete('/:id', async (request, response) => {
+  await Blog.findByIdAndDelete(request.params.id)
+  response.status(204).end()
 })
 
 module.exports = blogsRouter
