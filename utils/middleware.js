@@ -1,7 +1,11 @@
+// Middlewares used by the application
+
+// Dependencies
 const logger = require('./logger')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
+// Middleware for logging HTTP requests
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
   logger.info('Path:  ', request.path)
@@ -10,10 +14,12 @@ const requestLogger = (request, response, next) => {
   next()
 }
 
+// Middleware for handling unknown endpoint error
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
+// Middleware for getting token of token based login
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
@@ -24,6 +30,7 @@ const tokenExtractor = (request, response, next) => {
   next()
 }
 
+// Middleware for getting user information
 const userExtractor = async (request, response, next) => {
   try {
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
@@ -36,13 +43,14 @@ const userExtractor = async (request, response, next) => {
       return response.status(404).json({ error: 'user not found' })
     }
 
-    request.user = user // Tallennetaan käyttäjä request-objektiin
+    request.user = user
     next()
   } catch (error) {
-    next(error) // Siirretään virhe error handler -middlewarelle
+    next(error)
   }
 }
 
+// Middleware for handling errors
 const errorHandler = (error, request, response, next) => {
   logger.error(error.message)
 
@@ -61,6 +69,7 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+// Exports
 module.exports = {
   requestLogger,
   unknownEndpoint,

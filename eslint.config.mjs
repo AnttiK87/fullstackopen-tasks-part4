@@ -1,3 +1,5 @@
+//eslint configurations
+
 import globals from "globals";
 import stylisticJs from '@stylistic/eslint-plugin-js'
 import js from '@eslint/js'

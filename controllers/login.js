@@ -1,8 +1,12 @@
+// API routes for login related reguests
+
+// Dependencies
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 const loginRouter = require('express').Router()
 const User = require('../models/user')
 
+// login user
 loginRouter.post('/', async (request, response) => {
   const { username, password } = request.body
 
@@ -22,7 +26,7 @@ loginRouter.post('/', async (request, response) => {
     id: user._id,
   }
 
-  // token expires in 60*60 seconds, that is, in one hour
+  // token expires in one hour
   const token = jwt.sign(
     userForToken,
     process.env.SECRET,
@@ -34,4 +38,5 @@ loginRouter.post('/', async (request, response) => {
     .send({ token, username: user.username, name: user.name })
 })
 
+// Exports
 module.exports = loginRouter

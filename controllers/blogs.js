@@ -1,14 +1,18 @@
+// API routes for blog related reguests
+
+// Dependencies
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const middleware = require('../utils/middleware')
 
-
+// get all blogs
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
+// get specific blog
 blogsRouter.get('/:id', async (request, response) => {
   const blogs = await Blog.findById(request.params.id)
   if (blogs) {
@@ -18,10 +22,11 @@ blogsRouter.get('/:id', async (request, response) => {
   }
 })
 
+// add blog
 blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
   try {
-    const body = request.body  // Ei tarvitse käyttää await, koska body on jo saatavilla
-    const user = request.user  // Sama juttu, user on asetettu middlewaresta
+    const body = request.body
+    const user = request.user
 
     const blog = new Blog({
       title: body.title,
@@ -36,10 +41,11 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response, next) 
 
     response.status(201).json(savedBlog)
   } catch (error) {
-    next(error) // Siirretään virhe error handler -middlewarelle
+    next(error)
   }
 })
 
+// update blog
 blogsRouter.put('/:id', async (request, response) => {
   const body = request.body
 
@@ -57,19 +63,18 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: body.likes,
   }
 
-  // Etsi ensin blogi tietokannasta sen ID:llä
+
   const existingBlog = await Blog.findById(request.params.id)
 
   if (!existingBlog) {
-    // Jos blogia ei löydy, palautetaan 404-virhekoodi
     return response.status(404).json({ error: 'Blog not found' })
   }
 
-  // Jos blogi löytyy, päivitetään se
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
   response.json(updatedBlog)
 })
 
+// delete blog
 blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
 
   const userId = await request.user.id.toString()
@@ -88,4 +93,5 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
   }
 })
 
+// Exports
 module.exports = blogsRouter

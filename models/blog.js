@@ -1,6 +1,9 @@
+// Model for blogs that are added to the db
+
+// Dependencies
 const mongoose = require('mongoose')
 
-// define model and validation for items in db
+// "Blueprints" for blog in the db and settings for validation
 const blogSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -13,7 +16,7 @@ const blogSchema = new mongoose.Schema({
   },
   likes:{
     type: Number,
-    default: 0 // Asettaa likes-arvoksi oletuksena 0
+    default: 0 // likes default 0
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +24,7 @@ const blogSchema = new mongoose.Schema({
   }
 })
 
-// customize the JSON representation, don't show id and version
+// Editing how user data is returned as JSON
 blogSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString()
@@ -31,5 +34,5 @@ blogSchema.set('toJSON', {
 })
 
 
-// export the blog model
+// Exports
 module.exports = mongoose.model('Blog', blogSchema)

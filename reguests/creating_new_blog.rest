@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFrb3IiLCJpZCI6IjY3MGUwZDg1MjQ5NTg5MmE4ZDc4ODkxOSIsImlhdCI6MTcyODk4OTMxMiwiZXhwIjoxNzI4OTkyOTEyfQ.4-EY7Y5AHuXRC5RcbFVe4P_CcokLD0jkUdUshgY2uHc
+Authorization: Bearer Add_token_here
 
 {
     "title": "Testi Blogi 4",

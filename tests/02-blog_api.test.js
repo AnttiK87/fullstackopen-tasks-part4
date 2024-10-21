@@ -14,13 +14,14 @@ describe('user related requests', async () => {
     await helper.createNewTestUser()
   })
 
+
   test('Adding user succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
     const newUser = {
-      username: 'mluukkai',
-      name: 'Matti Luukkainen',
-      password: 'salainen',
+      username: 'akortel',
+      name: 'Antti Kortelainen',
+      password: 'salainensana',
     }
 
     await api
@@ -30,7 +31,7 @@ describe('user related requests', async () => {
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
-    //console.log('Käyttäjät lisäyksen jälkeen: ', usersAtEnd)
+    //console.log('users after the addition: ', usersAtEnd) // for debugging
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
 
     const usernames = usersAtEnd.map(u => u.username)
@@ -40,7 +41,7 @@ describe('user related requests', async () => {
   test('Adding user fails with errorcode 400 and error message if username already taken', async () => {
     const usersAtStart = await helper.usersInDb()
 
-    //console.log('Tietokanta alussa', usersAtStart)
+    //console.log('Users at db at start: ', usersAtStart) // for debugging
 
     const newUser = {
       username: 'testuser',
@@ -164,7 +165,7 @@ describe('adding of a new blog', async () => {
 
     await api
       .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)  // Lisää token Authorization-headeriin
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -306,8 +307,8 @@ describe('deletion of a blog', async () => {
     const blogToDelete = blogsAtStart[3]
 
     await api
-      .delete(`/api/blogs/${blogToDelete.id}`)  // Suorita delete-kutsu ensin
-      .set('Authorization', `Bearer ${token}`)  // Lisää token Authorization-headeriin
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
@@ -325,7 +326,7 @@ describe('deletion of a blog', async () => {
 
     await api
       .delete(`/api/blogs/${validNonexistingId}`)
-      .set('Authorization', `Bearer ${token}`)  // Lisää token Authorization-headeriin
+      .set('Authorization', `Bearer ${token}`)
       .expect(404)
   })
 
@@ -336,7 +337,7 @@ describe('deletion of a blog', async () => {
 
     await api
       .delete(`/api/blogs/${invalidId}`)
-      .set('Authorization', `Bearer ${token}`)  // Lisää token Authorization-headeriin
+      .set('Authorization', `Bearer ${token}`)
       .expect(400)
   })
 })

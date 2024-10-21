@@ -1,3 +1,4 @@
+// Functions for practising purposes of writing tests
 
 // for testing that testing enviroment works
 const dummy = (blogs) => {

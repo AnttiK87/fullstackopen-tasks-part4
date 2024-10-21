@@ -1,3 +1,6 @@
+// Tests for training purposes for functions in the list_helper.js file
+
+//dependencies
 const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
@@ -78,7 +81,7 @@ const blogs = [
   }
 ]
 
-// for testing test enviroment
+// for testing the test enviroment
 test('dummy returns one', () => {
   const result = listHelper.dummy(blogs)
   assert.strictEqual(result, 1)
